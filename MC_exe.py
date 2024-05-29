@@ -84,7 +84,7 @@ test_data=new_train_data[2954:5906].tolist()
 dev_labels=new_train_labels[5907:].tolist()
 dev_data=new_train_data[5907:].tolist()
 
-TESTING=True
+TESTING=False
 
 if TESTING:
     train_labels, train_data = train_labels[:2], train_data[:2]
@@ -246,8 +246,8 @@ checkpoint=False
 print("Setting model")
 model=set_model(model_string="Numpy",checkpoint=checkpoint)
 
-seed_arr = [0, 10]#, 50, 77, 100, 111, 150, 169, 200, 234, 250, 300, 350, 400, 450]
-B_sizes = [30]
+seed_arr = [0, 10, 50, 77, 100, 111, 150, 169, 200, 234, 250, 300, 350, 400, 450]
+B_sizes = [1250]
 epochs_arr = [2000]
 
 for SEED in seed_arr:
