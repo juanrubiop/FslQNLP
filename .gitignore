@@ -163,3 +163,7 @@ cython_debug/
 
 #Extra
 resources/embeddings
+
+miscellaneous.ipynb
+
+synonims.ipynb

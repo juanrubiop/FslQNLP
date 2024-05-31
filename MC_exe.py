@@ -84,7 +84,7 @@ test_data=new_train_data[2954:5906].tolist()
 dev_labels=new_train_labels[5907:].tolist()
 dev_data=new_train_data[5907:].tolist()
 
-TESTING=False
+TESTING=True
 
 if TESTING:
     train_labels, train_data = train_labels[:2], train_data[:2]
@@ -225,14 +225,14 @@ preq_embeddings=load_data()
 # Define atomic types
 N = AtomicType.NOUN
 S = AtomicType.SENTENCE
-map={N:1,S:1}
+map={N:2,S:1}
 
 n_layers=1
 
 alpha="Sim15Ansatz"
 beta="FslBase"
 gamma="FslSim15"
-ansatz_string=alpha
+ansatz_string=beta
 
 print("Turning sentences to circuits")
 print(ansatz_string)
