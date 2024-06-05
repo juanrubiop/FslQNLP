@@ -211,7 +211,7 @@ def main(EPOCHS, SEED, BATCH_SIZE,MODEL):
     a=0.05
     c=0.06
     A="0.1*Epochs"
-    logdir='trial\Baseline\Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}\Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
+    logdir='runs\Baseline\Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}\Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
 
     trainer = QuantumTrainer(
         model=MODEL,
@@ -270,7 +270,7 @@ print("Setting model")
 model=set_model(model_string="Numpy",checkpoint=checkpoint)
 
 seed_arr = [0, 10, 50, 77, 100, 111, 150, 169, 200, 234, 250, 300, 350, 400, 450]
-B_sizes = [1250]
+B_sizes = [700]
 epochs_arr = [2000]
 
 for SEED in seed_arr:
