@@ -25,6 +25,7 @@ warnings.filterwarnings("ignore")
 import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+
 parser = BobcatParser(verbose='text')
 tokeniser = SpacyTokeniser()
 
@@ -49,50 +50,55 @@ def read_data(filename):
     return labels, sentences
 
 
-def generate_diagrams(train_data,dev_data,test_data):
+def generate_diagrams(train_data,dev_data,test_data,OOV_test_data,redundant_test_data):
     raw_train_tokens = tokeniser.tokenise_sentences(train_data)
+    raw_train_tokens = [tokens[:-1] for tokens in raw_train_tokens]
+
     raw_dev_tokens = tokeniser.tokenise_sentences(dev_data)
+    raw_dev_tokens = [tokens[:-1] for tokens in raw_dev_tokens]
+
+
     raw_test_tokens = tokeniser.tokenise_sentences(test_data)
+    raw_test_tokens =  [tokens[:-1] for tokens in raw_test_tokens]
 
-    raw_train_diagrams = parser.sentences2diagrams(raw_train_tokens,tokenised=True)
-    raw_dev_diagrams = parser.sentences2diagrams(raw_dev_tokens,tokenised=True)
-    raw_test_diagrams = parser.sentences2diagrams(raw_test_tokens,tokenised=True)
+    raw_OOV_test_tokens = tokeniser.tokenise_sentences(OOV_test_data)
+    raw_OOV_test_tokens = [tokens[:-1] for tokens in raw_OOV_test_tokens]
 
+    raw_redundancy_test_tokens = tokeniser.tokenise_sentences(redundant_test_data)
+    raw_redundancy_test_tokens = [tokens[:-1] for tokens in raw_redundancy_test_tokens]
 
-    train_diagrams=raw_train_diagrams
-    dev_diagrams=raw_dev_diagrams
-    test_diagrams=raw_test_diagrams
+    train_diagrams = parser.sentences2diagrams(raw_train_tokens,tokenised=True)
+    dev_diagrams = parser.sentences2diagrams(raw_dev_tokens,tokenised=True)
+    test_diagrams = parser.sentences2diagrams(raw_test_tokens,tokenised=True)
+    OOV_test_diagrams = parser.sentences2diagrams(raw_OOV_test_tokens,tokenised=True)
+    redundancy_test_diagrams = parser.sentences2diagrams(raw_redundancy_test_tokens,tokenised=True)
 
-    train_diagrams = [remove_cups(diagram) for diagram in raw_train_diagrams]
-    dev_diagrams = [remove_cups(diagram) for diagram in raw_dev_diagrams]
-    test_diagrams = [remove_cups(diagram) for diagram in raw_test_diagrams]
+    #train_diagrams = [remove_cups(diagram) for diagram in train_diagrams]
+    #dev_diagrams = [remove_cups(diagram) for diagram in dev_diagrams]
+    #test_diagrams = [remove_cups(diagram) for diagram in test_diagrams]
+    #OOV_test_diagrams = [remove_cups(diagram) for diagram in OOV_test_diagrams]
+    #redundancy_test_diagrams = [remove_cups(diagram) for diagram in redundancy_test_diagrams]
     
-    return train_diagrams, dev_diagrams, test_diagrams
+    return train_diagrams, dev_diagrams, test_diagrams,OOV_test_diagrams,redundancy_test_diagrams
 
 
-new_train_labels, new_train_data = read_data('resources\dataset\\new_mc_clean_all_data.txt')
+train_labels, train_data = read_data('resources/dataset/new_mc_train_data.txt')
+dev_labels, dev_data = read_data('resources/dataset/new_mc_dev_data.txt')
+test_labels, test_data = read_data('resources/dataset/new_mc_test_data_seen.txt')
+OOV_test_labels, OOV_test_data = read_data('resources/dataset/new_mc_test_data_OOV.txt')
+redundant_test_labels, redundant_test_data = read_data('resources/dataset/new_mc_test_data_redundancy.txt')
 
-indices = np.arange(len(new_train_data))
-np.random.shuffle(indices)
-new_train_data =np.array(new_train_data)[indices]
-new_train_labels=np.array(new_train_labels)[indices]
-
-train_labels=new_train_labels[0:2953].tolist()
-train_data=new_train_data[0:2953].tolist()
-test_labels=new_train_labels[2954:5906].tolist()
-test_data=new_train_data[2954:5906].tolist()
-dev_labels=new_train_labels[5907:].tolist()
-dev_data=new_train_data[5907:].tolist()
-
-TESTING=True
+TESTING=False
 
 if TESTING:
     train_labels, train_data = train_labels[:2], train_data[:2]
     dev_labels, dev_data = dev_labels[:2], dev_data[:2]
     test_labels, test_data = test_labels[:2], test_data[:2]
+    OOV_test_labels, OOV_test_data = OOV_test_labels[:2], OOV_test_data[:2]
+    redundant_test_labels, redundant_test_data = redundant_test_labels[:2], redundant_test_data[:2]
     EPOCHS = 1
 
-train_diagrams, dev_diagrams, test_diagrams=generate_diagrams(train_data=train_data,dev_data=dev_data,test_data=test_data)
+train_diagrams, dev_diagrams, test_diagrams,OOV_test_diagrams,redundancy_test_diagrams=generate_diagrams(train_data=train_data,dev_data=dev_data,test_data=test_data,OOV_test_data=OOV_test_data,redundant_test_data=redundant_test_data)
 
 def create_circuits(map,n_layers,ansatz_string,preq_embeddings):
     match ansatz_string:
@@ -104,10 +110,17 @@ def create_circuits(map,n_layers,ansatz_string,preq_embeddings):
             ansatz = Sim15Ansatz(map,n_layers=n_layers, n_single_qubit_params=3)
 
     train_circuits = [ansatz(diagram) for diagram in train_diagrams]
+    print("Train circuits done")
     dev_circuits =  [ansatz(diagram) for diagram in dev_diagrams]
+    print("Dev circuits done")
     test_circuits = [ansatz(diagram) for diagram in test_diagrams]
+    print("Test circuits done")
+    OOV_test_circuits = [ansatz(diagram) for diagram in OOV_test_diagrams]
+    print("OOV circuits done")
+    redundancy_test_circuits = [ansatz(diagram) for diagram in redundancy_test_diagrams]
+    print("Redundant circuits done")
 
-    return train_circuits, dev_circuits, test_circuits
+    return train_circuits, dev_circuits, test_circuits, OOV_test_circuits, redundancy_test_circuits
 
 def set_model(model_string,checkpoint,logdir=''):
     match model_string:
@@ -153,6 +166,12 @@ def save_everything(logdir,loss_function,acc_function,a,c,A,model,trainer,test_a
     model=NumpyModel.from_checkpoint(logdir+'\\model.lt')
     test_acc = acc(model(test_circuits), test_labels)
 
+    bm_OOV_test_acc= acc(best_model(OOV_test_circuits), OOV_test_labels)
+    OOV_test_acc= acc(model(OOV_test_circuits), OOV_test_labels)
+
+    bm_redundant_test_acc= acc(best_model(redundancy_test_circuits), redundant_test_labels)
+    redundant_test_acc= acc(model(redundancy_test_circuits), redundant_test_labels)
+
     file_path = f"{logdir}/info_file.txt"
     with open(file_path, 'w') as file:
         # Write the input string to the file
@@ -174,7 +193,11 @@ def save_everything(logdir,loss_function,acc_function,a,c,A,model,trainer,test_a
     Seed: {SEED}
     Hyperparams: [a:{a},c:{c},A:{A}]
     Test accuracy: {test_acc}
-    Test accuracy best model: {best_model_test_acc}"""
+    Test accuracy best model: {best_model_test_acc}
+    OOV test accuracy: {OOV_test_acc}
+    OOV test accuracy best model: {bm_OOV_test_acc}
+    Redundant test accuarcy: {redundant_test_acc}
+    Redundant test accuracy best model: {bm_redundant_test_acc}"""
         file.write(input_string)
 
 
@@ -188,7 +211,7 @@ def main(EPOCHS, SEED, BATCH_SIZE,MODEL):
     a=0.05
     c=0.06
     A="0.1*Epochs"
-    logdir='runs\Baseline\Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}\Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
+    logdir='trial\Baseline\Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}\Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
 
     trainer = QuantumTrainer(
         model=MODEL,
@@ -237,9 +260,9 @@ ansatz_string=beta
 print("Turning sentences to circuits")
 print(ansatz_string)
 print(map)
-train_circuits, dev_circuits, test_circuits=create_circuits(map=map,n_layers=n_layers,ansatz_string=ansatz_string,preq_embeddings=preq_embeddings)
-
-all_circuits = train_circuits+dev_circuits+test_circuits
+train_circuits, dev_circuits, test_circuits,OOV_test_circuits, redundancy_test_circuits=create_circuits(map=map,n_layers=n_layers,ansatz_string=ansatz_string,preq_embeddings=preq_embeddings)
+print("Circuit Processing finished")
+all_circuits = train_circuits+dev_circuits+test_circuits+OOV_test_circuits+redundancy_test_circuits
 
 checkpoint=False
 
