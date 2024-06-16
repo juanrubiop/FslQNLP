@@ -13,11 +13,11 @@ Task: Meaning classification
     Optimizer: SPSA optimizer
     Epochs: 2000
     Batch size: 700
-    Seed: 10
+    Seed: 77
     Hyperparams: [a:0.05,c:0.06,A:0.1*Epochs]
-    Test accuracy: 0.8418467583497053
-    Test accuracy best model: 0.8418467583497053
-    OOV test accuracy: 0.589041095890411
-    OOV test accuracy best model: 0.589041095890411
-    Redundant test accuarcy: 0.6702296120348377
-    Redundant test accuracy best model: 0.6694378463974664
+    Test accuracy: 0.7927308447937131
+    Test accuracy best model: 0.8005893909626719
+    OOV test accuracy: 0.684931506849315
+    OOV test accuracy best model: 0.684931506849315
+    Redundant test accuarcy: 0.7046714172604909
+    Redundant test accuracy best model: 0.6943784639746635

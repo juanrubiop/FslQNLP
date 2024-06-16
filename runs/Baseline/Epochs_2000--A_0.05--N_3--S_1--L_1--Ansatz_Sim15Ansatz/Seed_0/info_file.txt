@@ -2,9 +2,9 @@ Task: Meaning classification
     Classical Embeddings: GloVe 50-d
     Parsing: True
     Rewritign: Remove Cups
-    Ansatz: FslBase
+    Ansatz: Sim15Ansatz
     Layers: 1
-    Map: [N:5, S:1]
+    Map: [N:3, S:1]
     Model: Numpy
     Backend: None
     Trainer: Quantum Trainer
@@ -13,11 +13,11 @@ Task: Meaning classification
     Optimizer: SPSA optimizer
     Epochs: 2000
     Batch size: 700
-    Seed: 10
+    Seed: 0
     Hyperparams: [a:0.05,c:0.06,A:0.1*Epochs]
-    Test accuracy: 0.8418467583497053
-    Test accuracy best model: 0.8418467583497053
-    OOV test accuracy: 0.589041095890411
-    OOV test accuracy best model: 0.589041095890411
-    Redundant test accuarcy: 0.6702296120348377
-    Redundant test accuracy best model: 0.6694378463974664
+    Test accuracy: 0.9921414538310412
+    Test accuracy best model: 0.9921414538310412
+    OOV test accuracy: 0.6164383561643836
+    OOV test accuracy best model: 0.6164383561643836
+    Redundant test accuarcy: 0.7403008709422011
+    Redundant test accuracy best model: 0.7466349960411718

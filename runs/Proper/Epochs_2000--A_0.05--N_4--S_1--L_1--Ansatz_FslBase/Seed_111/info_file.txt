@@ -4,7 +4,7 @@ Task: Meaning classification
     Rewritign: Remove Cups
     Ansatz: FslBase
     Layers: 1
-    Map: [N:5, S:1]
+    Map: [N:4, S:1]
     Model: Numpy
     Backend: None
     Trainer: Quantum Trainer
@@ -13,11 +13,11 @@ Task: Meaning classification
     Optimizer: SPSA optimizer
     Epochs: 2000
     Batch size: 700
-    Seed: 10
+    Seed: 111
     Hyperparams: [a:0.05,c:0.06,A:0.1*Epochs]
-    Test accuracy: 0.8418467583497053
-    Test accuracy best model: 0.8418467583497053
+    Test accuracy: 0.8467583497053045
+    Test accuracy best model: 0.8467583497053045
     OOV test accuracy: 0.589041095890411
     OOV test accuracy best model: 0.589041095890411
-    Redundant test accuarcy: 0.6702296120348377
-    Redundant test accuracy best model: 0.6694378463974664
+    Redundant test accuarcy: 0.7015043547110056
+    Redundant test accuracy best model: 0.7015043547110056
