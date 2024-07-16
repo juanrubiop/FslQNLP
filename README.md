@@ -5,3 +5,10 @@ This contains the resources and the code to run the meaning comparison task in N
 
 ## Preparations
 The requirement_venv.txt contains all the modules and their versions. Python 3.11.9 is used and encouraged, since the same version of the packages may not exist for other versions of python. The GloVe embeddings or any other embeddings need to be downloaded and saved in the appropriate resource folder. resources\embeddings.
+
+## Keys for file schema
+For NN models:
+
+    (name of training set)_(number of qubits)_(number of parameters)
+
+    AUW - All used words (i.e. training space is all but only the words used, they can be used during training or testing)

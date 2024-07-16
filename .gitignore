@@ -124,6 +124,7 @@ celerybeat.pid
 .venv
 env/
 venv/
+venv2/
 ENV/
 env.bak/
 venv.bak/
@@ -175,6 +176,6 @@ resources/dataset_duplicates_03072024
 
 diary.txt
 
-trial
+trial.py
 
-venv2/x
+salinastqm.ipynb

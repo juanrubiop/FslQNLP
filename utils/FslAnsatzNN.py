@@ -24,7 +24,7 @@ class FslNN(CircuitAnsatz):
                          n_single_qubit_params,
                          self.circuito,
                          discard,
-                         [Rx])
+                         [Rx,Ry])
 
     def circuito(self,n_qubits,params):
         

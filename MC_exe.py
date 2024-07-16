@@ -1,3 +1,15 @@
+"""
+To run this on terminal execute: python3 MC_exe.py $N$ $n_layers$ $is_testing$ $ansatz$
+
+where ansatz is an element of ['alpha','beta','gamma'] and
+alpha="Sim15Ansatz"
+beta="FslBase"
+gamma="FslSim15"
+
+Example: python3 MC_exe.py 2 1 True alpha
+"""
+
+
 from lambeq import BobcatParser, AtomicType, SpacyTokeniser, Rewriter
 import numpy as np
 
@@ -17,13 +29,22 @@ from lambeq import IQPAnsatz,Sim15Ansatz
 
 import datetime
 
-from utils.FslAnsatz import FslSim15Ansatz, FslStronglyEntanglingAnsatz, FslBaseAnsatz
+from mods.FslAnsatz import FslSim15Ansatz, FslStronglyEntanglingAnsatz, FslBaseAnsatz
+
+from icecream import ic
 
 import warnings
 warnings.filterwarnings("ignore")
 
 import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+import pathlib
+
+import sys
+
+args=sys.argv
+
 
 
 parser = BobcatParser(verbose='text')
@@ -32,7 +53,7 @@ tokeniser = SpacyTokeniser()
 
 def load_data():
     preq_embeddings={}
-    with open("resources\embeddings\wikipedia_glove\glove.6B.50d.txt", 'r', encoding="utf-8") as f:
+    with open("/home/jrubiope/FslQnlp/resources/embeddings/wikipedia_glove/glove.6B.50d.txt", 'r', encoding="utf-8") as f:
         for line in f:
             values = line.split()
             word = values[0]
@@ -82,17 +103,19 @@ def generate_diagrams(train_data,dev_data,test_data,OOV_test_data,redundant_test
     return train_diagrams, dev_diagrams, test_diagrams,OOV_test_diagrams,redundancy_test_diagrams
 
 
-train_labels, train_data = read_data('resources/dataset/new_mc_train_data.txt')
-dev_labels, dev_data = read_data('resources/dataset/new_mc_dev_data.txt')
-test_labels, test_data = read_data('resources/dataset/new_mc_test_data_seen.txt')
-OOV_test_labels, OOV_test_data = read_data('resources/dataset/new_mc_test_data_OOV.txt')
-redundant_test_labels, redundant_test_data = read_data('resources/dataset/new_mc_test_data_redundancy.txt')
+ic('reading data')
+train_labels, train_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_train_data.txt')
+dev_labels, dev_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_dev_data.txt')
+test_labels, test_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_test_data_seen.txt')
+OOV_test_labels, OOV_test_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_test_data_OOV.txt')
+redundant_test_labels, redundant_test_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_test_data_redundancy.txt')
 
-TESTING=False
+TESTING=(True if args[3]=='True' else False)
+ic(TESTING)
 
 if TESTING:
-    train_labels, train_data = train_labels[:2], train_data[:2]
-    dev_labels, dev_data = dev_labels[:2], dev_data[:2]
+    train_labels, train_data = train_labels[:100], train_data[:100]
+    dev_labels, dev_data = dev_labels[:100], dev_data[:100]
     test_labels, test_data = test_labels[:2], test_data[:2]
     OOV_test_labels, OOV_test_data = OOV_test_labels[:2], OOV_test_data[:2]
     redundant_test_labels, redundant_test_data = redundant_test_labels[:2], redundant_test_data[:2]
@@ -126,7 +149,7 @@ def set_model(model_string,checkpoint,logdir=''):
     match model_string:
         case "Numpy":
             if checkpoint:
-                    model = NumpyModel.from_checkpoint(logdir+'\model.lt')
+                    model = NumpyModel.from_checkpoint(logdir+'/model.lt')
             else:
                     model = NumpyModel.from_diagrams(all_circuits, use_jit=True)
         case "Tket":
@@ -158,12 +181,12 @@ def save_everything(logdir,loss_function,acc_function,a,c,A,model,trainer,test_a
     ax_bl.plot(range_, trainer.train_eval_results['acc'], color=next(colours))
     ax_tr.plot(range_, trainer.val_costs, color=next(colours))
     ax_br.plot(range_, trainer.val_eval_results['acc'], color=next(colours))
-    plt.savefig(logdir+'\plot.png')
+    plt.savefig(logdir+'/plot.png')
 
 
-    best_model=NumpyModel.from_checkpoint(logdir+'\\best_model.lt')
+    best_model=NumpyModel.from_checkpoint(logdir+'/best_model.lt')
     best_model_test_acc = acc(best_model(test_circuits), test_labels)
-    model=NumpyModel.from_checkpoint(logdir+'\\model.lt')
+    model=NumpyModel.from_checkpoint(logdir+'/model.lt')
     test_acc = acc(model(test_circuits), test_labels)
 
     bm_OOV_test_acc= acc(best_model(OOV_test_circuits), OOV_test_labels)
@@ -211,7 +234,10 @@ def main(EPOCHS, SEED, BATCH_SIZE,MODEL):
     a=0.05
     c=0.06
     A="0.1*Epochs"
-    logdir='runs\Baseline\Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}\Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
+    logdir='/home/jrubiope/FslQnlp/runs/sge/Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}/Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
+    path = pathlib.Path(logdir)
+    path.mkdir(parents=True, exist_ok=True)
+    print('Initialize trainer')
 
     trainer = QuantumTrainer(
         model=MODEL,
@@ -237,25 +263,27 @@ def main(EPOCHS, SEED, BATCH_SIZE,MODEL):
     now = datetime.datetime.now()
     t = now.strftime("%Y-%m-%d_%H_%M_%S")
     print(t)
-
+    print('Starting fit')
     trainer.fit(train_dataset, val_dataset, log_interval=10)
-    test_acc = ''#acc(model(test_circuits), test_labels)
+    test_acc = 'acc(model(test_circuits), test_labels)'
 
     save_everything(logdir=logdir,loss_function=loss_function,acc_function=acc_function,a=a,c=c,A=A,model=MODEL,trainer=trainer,test_acc=test_acc)
 
-
+ic('importing embeddings')
 preq_embeddings=load_data()
+ic('Finished importing embeddings')
 # Define atomic types
 N = AtomicType.NOUN
 S = AtomicType.SENTENCE
-map={N:2,S:1}
+map={N:int(args[1]),S:1}
 
-n_layers=1
+n_layers=int(args[2])
 
 alpha="Sim15Ansatz"
 beta="FslBase"
 gamma="FslSim15"
-ansatz_string=beta
+ansatz_string={args[4]=='alpha': alpha, args[4]=='beta': beta}.get(True, gamma)
+ic(ansatz_string)
 
 print("Turning sentences to circuits")
 print(ansatz_string)
@@ -270,14 +298,17 @@ print("Setting model")
 model=set_model(model_string="Numpy",checkpoint=checkpoint)
 
 seed_arr = [0, 10, 50, 77, 100, 111, 150, 169, 200, 234, 250, 300, 350, 400, 450]
+if TESTING:
+    seed_arr = [100, 111]
 B_sizes = [700]
-epochs_arr = [2000]
+epochs_arr = [1000]
 
 for SEED in seed_arr:
     for BATCH_SIZE in B_sizes:
         for EPOCHS in epochs_arr:
             print(EPOCHS, SEED, BATCH_SIZE)
             main(EPOCHS, SEED, BATCH_SIZE,MODEL=model)
+            model=set_model(model_string="Numpy",checkpoint=checkpoint)
 
 now = datetime.datetime.now()
 t = now.strftime("%Y-%m-%d_%H_%M_%S")
