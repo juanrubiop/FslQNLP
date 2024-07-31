@@ -16,6 +16,8 @@ import torchvision.transforms as transforms
 from datetime import datetime
 from torch.utils.tensorboard import SummaryWriter
 
+from icecream import ic
+
 
 from numpy import dot
 from numpy.linalg import norm
@@ -31,7 +33,7 @@ device = (
     else "cpu"
 )
 
-print(f"Using {device} device")
+ic(f"Using {device} device")
 
 from torch.utils.data import Dataset
 
@@ -48,7 +50,7 @@ class CustomDataset(Dataset):
 
 preq_embeddings={}
 resource_path="/home/jrubiope/FslQnlp/resources/embeddings/common_crawl/glove.42B.300d.txt"
-resource_path="resources/embeddings/common_crawl/glove.42B.300d.txt"
+#resource_path="resources/embeddings/common_crawl/glove.42B.300d.txt"
 with open(resource_path, 'r', encoding="utf-8") as f:
     for line in f:
         values = line.split()
@@ -292,7 +294,7 @@ def train_one_epoch(epoch_index, tb_writer):
         # if i % B_SIZE == B_SIZE-1:
         if i%B == B-1:
             last_loss = running_loss / B_SIZE # loss per batch
-            print('  batch {} loss: {}'.format(i + 1, last_loss*100))
+            ic('  batch {} loss: {}'.format(i + 1, last_loss*100))
             tb_x = epoch_index * len(training_loader) + i + 1
             tb_writer.add_scalar('Loss/train', last_loss, tb_x)
             running_loss = 0.
@@ -302,13 +304,17 @@ def train_one_epoch(epoch_index, tb_writer):
 # Initializing in a separate cell so we can easily add more epochs to the same run
 timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
 runs='/home/jrubiope/FslQnlp/runs/NN_outputs/AUW_{}_{}/Tensor_Board_Events/Prueba{}'.format(N_Qubits,N_PARAMS,timestamp)
-runs='runs/NN_outputs/AUW_{}_{}/Tensor_Board_Events/Prueba{}'.format(N_Qubits,N_PARAMS,timestamp)
+#runs='runs/NN_outputs/AUW_{}_{}/Tensor_Board_Events/Prueba{}'.format(N_Qubits,N_PARAMS,timestamp)
 path = pathlib.Path(runs)
 path.mkdir(parents=True, exist_ok=True)
-print(runs)
+ic(runs)
 model_path='/home/jrubiope/FslQnlp/runs/NN_outputs/AUW_{}_{}/Models'.format(N_Qubits,N_PARAMS)
-model_path='runs/NN_outputs/AUW_{}_{}/Models'.format(N_Qubits,N_PARAMS)
+#model_path='runs/NN_outputs/AUW_{}_{}/Models'.format(N_Qubits,N_PARAMS)
 path = pathlib.Path(model_path)
+path.mkdir(parents=True, exist_ok=True)
+
+resources_path_model=f'/home/jrubiope/FslQnlp/resources/embeddings/NN/AUW_{N_Qubits}_{N_PARAMS}/Models'
+path = pathlib.Path(resources_path_model)
 path.mkdir(parents=True, exist_ok=True)
 
 
@@ -318,7 +324,8 @@ EPOCHS = 15
 best_vloss = 1_000_000.
 
 for epoch in range(EPOCHS):
-    print('EPOCH {}:'.format(epoch_number + 1))
+    ep='EPOCH {}:'.format(epoch_number + 1)
+    ic(ep)
 
     # Make sure gradient tracking is on, and do a pass over the data
     model.train(True)
@@ -341,7 +348,8 @@ for epoch in range(EPOCHS):
             running_vloss += vloss
 
     avg_vloss = running_vloss / (i + 1)
-    print('LOSS-- Train: {} Valid: {}'.format(avg_loss*100, avg_vloss*100))
+    calue='LOSS-- Train: {} Valid: {}'.format(avg_loss*100, avg_vloss*100)
+    ic(value)
 
     # Log the running loss averaged per batch
     # for both training and validation
@@ -353,12 +361,16 @@ for epoch in range(EPOCHS):
     # Track best performance, and save the model's state
     if avg_vloss < best_vloss:
         best_vloss = avg_vloss
-        model_path = '/home/jrubiope/FslQnlp/runs/NN_outputs/AUW_5_8/Models/best_model_{}_{}'.format(timestamp, epoch_number)
-        model_path = 'runs/NN_outputs/AUW_{}_{}/Models/best_model'.format(N_Qubits,N_PARAMS)
-        torch.save(model.state_dict(), model_path)
+        best_model_path = model_path+'/best_model'
+        best_model_resources=resources_path_model+'/best_model'
+        #model_path = 'runs/NN_outputs/AUW_{}_{}/Models/best_model'.format(N_Qubits,N_PARAMS)
+        torch.save(model.state_dict(), best_model_path)
+        torch.save(model.state_dict(), best_model_resources)
+        
+
 
     epoch_number += 1
 
 
-model_path = 'runs/NN_outputs/AUW_{}_{}/Models/final_model'.format(N_Qubits,N_PARAMS)
-torch.save(model.state_dict(), model_path)
+final_model_path = model_path+'/final_model'
+torch.save(model.state_dict(), final_model_path)

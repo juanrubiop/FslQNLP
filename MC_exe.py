@@ -17,7 +17,7 @@ from lambeq import TketModel, QuantumTrainer, SPSAOptimizer,remove_cups
 
 #from lambeq import remove_cups
 
-from pytket.extensions.qiskit import AerBackend
+#from pytket.extensions.qiskit import AerBackend
 
 import matplotlib.pyplot as plt
 
@@ -29,7 +29,7 @@ from lambeq import IQPAnsatz,Sim15Ansatz
 
 import datetime
 
-from mods.FslAnsatz import FslSim15Ansatz, FslStronglyEntanglingAnsatz, FslBaseAnsatz
+from mods.FslAnsatz import FslSim15Ansatz, FslStronglyEntanglingAnsatz, FslBaseAnsatz, FslNN
 
 from icecream import ic
 
@@ -41,25 +41,33 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 import pathlib
 
+import torch
+
+from torch import nn
+
 import sys
 
 args=sys.argv
 
 
-
+ic('parser and tokeniser')
 parser = BobcatParser(verbose='text')
 tokeniser = SpacyTokeniser()
 
 
+
 def load_data():
     preq_embeddings={}
-    with open("/home/jrubiope/FslQnlp/resources/embeddings/wikipedia_glove/glove.6B.50d.txt", 'r', encoding="utf-8") as f:
+    with open("resources/embeddings/common_crawl/glove.42B.300d.txt", 'r', encoding="utf-8") as f:
         for line in f:
             values = line.split()
             word = values[0]
             vector = np.asarray(values[1:], "float32")
             preq_embeddings[word] = vector
     return preq_embeddings
+
+ic('importing embeddings')
+preq_embeddings=load_data()
 
 def read_data(filename):
     labels, sentences = [], []
@@ -69,6 +77,19 @@ def read_data(filename):
             labels.append([t, 1-t])
             sentences.append(line[1:].strip())
     return labels, sentences
+
+def get_unique_words(sentences):
+    unique_words = set()
+    
+    for sentence in sentences:
+        words = sentence.split()
+        for word in words:
+            # Remove punctuation and convert to lower case
+            clean_word = ''.join(char for char in word if char.isalnum()).lower()
+            if clean_word:
+                unique_words.add(clean_word)
+    
+    return unique_words
 
 
 def generate_diagrams(train_data,dev_data,test_data,OOV_test_data,redundant_test_data):
@@ -102,35 +123,121 @@ def generate_diagrams(train_data,dev_data,test_data,OOV_test_data,redundant_test
     
     return train_diagrams, dev_diagrams, test_diagrams,OOV_test_diagrams,redundancy_test_diagrams
 
+def get_NN(N_Qubits):
+    N_PARAMS=3*N_Qubits-1
+    class PreQ(nn.Module):
+        def __init__(self):
+            super(PreQ,self).__init__()
+            self.flatten = nn.Flatten(start_dim=0)
+            self.linear_relu_stack = nn.Sequential(
+                nn.Linear(300, 200),
+                nn.ReLU(),
+                nn.Linear(200, 100),
+                nn.ReLU(),
+                nn.Linear(100, 50),
+                nn.ReLU(),
+                nn.Linear(50,N_PARAMS)
+            )
+            self.double()
+
+        def forward(self, x):
+            #x = self.flatten(x)
+            logits1=self.linear_relu_stack(x)
+
+
+            return logits1
+
+        def get_quantum_state(self,parameters):
+
+            first_layer=torch.stack([self.recursiveRx(i,parameters,N_Qubits-1) for i in range(parameters.shape[0])])
+            second_layer=torch.stack([self.recursiveRy(i,parameters,2*N_Qubits-1) for i in range(parameters.shape[0])])
+
+            rotation_layers=[first_layer,second_layer]
+
+            Cx_layers=[  kron(Id(i),kron(CRx(parameters[:,2*N_Qubits+i]),Id(N_Qubits-i-2))) for i in range(N_Qubits-1) ]
+
+            all_layers=rotation_layers+Cx_layers
+            
+            output=self.compose(all_layers)        
+
+            return output
+
+        def recursiveRx(self, i, parameters,counter):        
+            if counter==1:
+                return kron(Rx(parameters[:,counter])[i],Rx(parameters[:,1])[i])
+            else:
+                return kron(self.recursiveRx(i,parameters,counter-1),Rx(parameters[:,counter])[i])
+
+        def recursiveRy(self, i, parameters,counter):        
+            if counter==N_Qubits+1:
+                return kron(Ry(parameters[:,counter-1])[i],Ry(parameters[:,counter])[i])
+            else:
+                return kron(self.recursiveRy(i,parameters,counter-1),Ry(parameters[:,counter])[i])
+
+        def compose(self,layers):
+
+            if len(layers)==2:
+                return bmm(layers[0],layers[1])
+            
+            else:
+                last_element=layers.pop()
+                return bmm(self.compose(layers),last_element)
+
+    saved_model = PreQ()
+    PATH=f'resources/embeddings/NN/AUW_{N_Qubits}_{N_PARAMS}/Models/best_model'
+    saved_model.load_state_dict(torch.load(PATH))
+    saved_model.eval()
+    return saved_model
+    
 
 ic('reading data')
-train_labels, train_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_train_data.txt')
-dev_labels, dev_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_dev_data.txt')
-test_labels, test_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_test_data_seen.txt')
-OOV_test_labels, OOV_test_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_test_data_OOV.txt')
-redundant_test_labels, redundant_test_data = read_data('/home/jrubiope/FslQnlp/resources/dataset/new_mc_test_data_redundancy.txt')
+train_labels, train_data = read_data('resources/dataset/new_mc_train_data.txt')
+dev_labels, dev_data = read_data('resources/dataset/new_mc_dev_data.txt')
+test_labels, test_data = read_data('resources/dataset/new_mc_test_data_seen.txt')
+OOV_test_labels, OOV_test_data = read_data('resources/dataset/new_mc_test_data_OOV.txt')
+redundant_test_labels, redundant_test_data = read_data('resources/dataset/new_mc_test_data_redundancy.txt')
+
+all_sentences=train_data+dev_data+test_data+OOV_test_data+redundant_test_data
+unique_words=get_unique_words(all_sentences)
+unique_words.remove('1')
+unique_words=list(unique_words)
+values=[preq_embeddings.get(key) for key in unique_words]
+ic(len(values))
+unique_words_values=torch.tensor(values,dtype=torch.double)
+
+NN_embeddings={}
+for i in range(2,11):
+    model=get_NN(i)
+    outputs=model(unique_words_values).tolist()
+    temp_dict={word:output for word,output in zip(unique_words,outputs)}
+    NN_embeddings[i]=temp_dict
 
 TESTING=(True if args[3]=='True' else False)
 ic(TESTING)
 
 if TESTING:
-    train_labels, train_data = train_labels[:100], train_data[:100]
-    dev_labels, dev_data = dev_labels[:100], dev_data[:100]
+    train_labels, train_data = train_labels[:2], train_data[:2]
+    dev_labels, dev_data = dev_labels[:2], dev_data[:2]
     test_labels, test_data = test_labels[:2], test_data[:2]
     OOV_test_labels, OOV_test_data = OOV_test_labels[:2], OOV_test_data[:2]
     redundant_test_labels, redundant_test_data = redundant_test_labels[:2], redundant_test_data[:2]
     EPOCHS = 1
 
+
+ic('generating diagrams')
 train_diagrams, dev_diagrams, test_diagrams,OOV_test_diagrams,redundancy_test_diagrams=generate_diagrams(train_data=train_data,dev_data=dev_data,test_data=test_data,OOV_test_data=OOV_test_data,redundant_test_data=redundant_test_data)
 
 def create_circuits(map,n_layers,ansatz_string,preq_embeddings):
+    ansatz = Sim15Ansatz(map,n_layers=n_layers, n_single_qubit_params=3)
     match ansatz_string:
         case "FslBase":
             ansatz = FslBaseAnsatz(preq_embeddings,map, n_layers=n_layers)
-        case "FslSim15":
-            ansatz = FslSim15Ansatz(preq_embeddings,map, n_layers=n_layers)  
-        case "Sim15Ansatz":
-            ansatz = Sim15Ansatz(map,n_layers=n_layers, n_single_qubit_params=3)
+        case "Sim15":
+            ansatz = Sim15Ansatz(map,n_layers=n_layers, n_single_qubit_params=3)  
+        case "FslNN":
+            ansatz = FslNN(preq_embeddings=NN_embeddings,ob_map=map,n_layers=n_layers)
+        case "IQP":
+            ansatz = IQPAnsatz(preq_embeddings=NN_embeddings,ob_map=map,n_layers=n_layers)
 
     train_circuits = [ansatz(diagram) for diagram in train_diagrams]
     print("Train circuits done")
@@ -146,6 +253,7 @@ def create_circuits(map,n_layers,ansatz_string,preq_embeddings):
     return train_circuits, dev_circuits, test_circuits, OOV_test_circuits, redundancy_test_circuits
 
 def set_model(model_string,checkpoint,logdir=''):
+    ic('setting model')
     match model_string:
         case "Numpy":
             if checkpoint:
@@ -227,14 +335,14 @@ def save_everything(logdir,loss_function,acc_function,a,c,A,model,trainer,test_a
 def main(EPOCHS, SEED, BATCH_SIZE,MODEL):
     # Using the builtin binary cross-entropy error from lambeq
     acc = lambda y_hat, y: np.sum(np.round(y_hat) == y) / len(y) / 2  # half due to double-counting
-    bce = BinaryCrossEntropyLoss()
+    bce = BinaryCrossEntropyLoss(use_jax=True)
     loss_function="BindaryCrosEntropyLoss"
     acc_function="lambda y_hat, y: np.sum(np.round(y_hat) == y) / len(y) / 2"
 
     a=0.05
     c=0.06
     A="0.1*Epochs"
-    logdir='/home/jrubiope/FslQnlp/runs/sge/Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}/Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
+    logdir='runs/sge/Epochs_{}--A_{}--N_{}--S_{}--L_{}--Ansatz_{}/Seed_{}'.format(EPOCHS,a,map[N],map[S],n_layers,ansatz_string,SEED)
     path = pathlib.Path(logdir)
     path.mkdir(parents=True, exist_ok=True)
     print('Initialize trainer')
@@ -269,8 +377,6 @@ def main(EPOCHS, SEED, BATCH_SIZE,MODEL):
 
     save_everything(logdir=logdir,loss_function=loss_function,acc_function=acc_function,a=a,c=c,A=A,model=MODEL,trainer=trainer,test_acc=test_acc)
 
-ic('importing embeddings')
-preq_embeddings=load_data()
 ic('Finished importing embeddings')
 # Define atomic types
 N = AtomicType.NOUN
@@ -279,38 +385,39 @@ map={N:int(args[1]),S:1}
 
 n_layers=int(args[2])
 
-alpha="Sim15Ansatz"
+alpha="IQP"
 beta="FslBase"
-gamma="FslSim15"
+gamma="FslNN"
 ansatz_string={args[4]=='alpha': alpha, args[4]=='beta': beta}.get(True, gamma)
 ic(ansatz_string)
 
-print("Turning sentences to circuits")
-print(ansatz_string)
-print(map)
+
+ic("Turning sentences to circuits")
+ic(ansatz_string)
+ic(map)
 train_circuits, dev_circuits, test_circuits,OOV_test_circuits, redundancy_test_circuits=create_circuits(map=map,n_layers=n_layers,ansatz_string=ansatz_string,preq_embeddings=preq_embeddings)
-print("Circuit Processing finished")
+ic("Circuit Processing finished")
 all_circuits = train_circuits+dev_circuits+test_circuits+OOV_test_circuits+redundancy_test_circuits
 
 checkpoint=False
 
-print("Setting model")
+ic("Setting model")
 model=set_model(model_string="Numpy",checkpoint=checkpoint)
 
 seed_arr = [0, 10, 50, 77, 100, 111, 150, 169, 200, 234, 250, 300, 350, 400, 450]
 if TESTING:
     seed_arr = [100, 111]
 B_sizes = [700]
-epochs_arr = [1000]
+epochs_arr = [1500]
 
 for SEED in seed_arr:
     for BATCH_SIZE in B_sizes:
         for EPOCHS in epochs_arr:
-            print(EPOCHS, SEED, BATCH_SIZE)
-            main(EPOCHS, SEED, BATCH_SIZE,MODEL=model)
+            ic(EPOCHS, SEED, BATCH_SIZE)
+            ic(main(EPOCHS, SEED, BATCH_SIZE,MODEL=model))
             model=set_model(model_string="Numpy",checkpoint=checkpoint)
 
 now = datetime.datetime.now()
 t = now.strftime("%Y-%m-%d_%H_%M_%S")
-print(t)
+ic(t)
 

@@ -16,6 +16,55 @@ import numpy as np
 
 from sympy import Symbol
 
+
+import torch
+
+class FslNN(CircuitAnsatz):
+    def __init__(self,preq_embeddings, ob_map, n_layers, n_single_qubit_params = 2, discard = False):
+        self.preq_embeddings=preq_embeddings
+        self.n_layers=n_layers
+        super().__init__(ob_map,
+                         n_layers,
+                         n_single_qubit_params,
+                         self.circuito,
+                         discard,
+                         [Rx,Ry])
+
+    def circuito(self,n_qubits,params):
+        ic(n_qubits)
+        pattern = '^\w+?(?=__)'
+        word=params[0][0].name
+        matches = re.search(pattern,word)
+        word = matches.group(0)
+
+        circuit=Id(n_qubits)
+
+        if (n_qubits==1):
+            circuit >>= Id().tensor(*[Rx(phase=Symbol(f'{word} 1'))])
+            circuit >>= Id().tensor(*[Rz(phase=Symbol(f'{word} 2'))])
+
+            return circuit
+
+        #Pre Q embeddings
+        circuit >>= Id().tensor(*[Rx(phase=phi) for phi in self.preq_embeddings[n_qubits][word][0:n_qubits]])
+        circuit >>= Id().tensor(*[Ry(phase=phi) for phi in self.preq_embeddings[n_qubits][word][n_qubits:2*n_qubits]])
+        for j in range(n_qubits - 1):
+            circuit >>= Id(j) @ CRx(phase=self.preq_embeddings[n_qubits][word][2*n_qubits+j]) @ Id(n_qubits - j - 2)
+
+        #W transform
+        n_string=str(n_qubits)
+        for m in range(self.n_layers):
+            qubit_shift=m*(3*n_qubits-1)
+            circuit >>= Id().tensor(*[Ry(Symbol(n_string+'_qubit_{}'.format(i+qubit_shift))) for i in range(n_qubits)])
+            circuit >>= Id().tensor(*[Rz(Symbol(n_string+'_qubit_{}'.format(i+n_qubits+qubit_shift))) for i in range(n_qubits)])
+            for j in range(n_qubits - 1):
+                circuit >>= Id(j) @ CRx(Symbol(n_string+'_qubit_{}'.format(j+2*n_qubits+qubit_shift))) @ Id(n_qubits - j - 2)
+
+        return circuit
+
+    def params_shape(self, n_qubits):
+        return (self.n_layers + 1, n_qubits)
+
 class FslBaseAnsatz(CircuitAnsatz):
     def __init__(self,preq_embeddings, ob_map, n_layers, n_single_qubit_params = 2, discard = False):
         self.preq_embeddings=preq_embeddings
