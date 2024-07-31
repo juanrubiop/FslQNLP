@@ -164,7 +164,9 @@ cython_debug/
 
 
 #Extra
-resources/embeddings
+resources/embeddings/common_crawl
+resources/embeddings/wikipedia_glove
+resources/embeddings/word2vec
 
 miscellaneous.ipynb
 
