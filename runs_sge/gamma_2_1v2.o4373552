@@ -1,0 +1,203 @@
+GPU Prolog Script v1.14
+This is a GPU node.
+Enough GPUs available.
+Allocating card 0
+gonzo-605-17.local
+Tue  6 Aug 17:34:29 BST 2024
+Time56h
+ic| 'parser and tokeniser'
+ic| 'importing embeddings'
+ic| 'reading data'
+ic| len(values): 52
+ic| TESTING: False
+ic| 'generating diagrams'
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+ic| 'Finished importing embeddings'
+ic| ansatz_string: 'FslNN'
+ic| 'Turning sentences to circuits'
+ic| ansatz_string: 'FslNN'
+ic| map: {grammar.pregroup.Ty(rigid.Ob('n')): 2, grammar.pregroup.Ty(rigid.Ob('s')): 1}
+ic| 'Circuit Processing finished'
+ic| 'Setting model'
+ic| 'setting model'
+ic| EPOCHS: 1500, SEED: 450, BATCH_SIZE: 700
+Epoch 10:    train/loss: 0.7564   valid/loss: 0.6758   train/acc: 0.6297   valid/acc: 0.6379
+Epoch 20:    train/loss: 0.6125   valid/loss: 0.5891   train/acc: 0.6907   valid/acc: 0.6667
+Epoch 30:    train/loss: 0.6384   valid/loss: 0.5762   train/acc: 0.7413   valid/acc: 0.7011
+Epoch 40:    train/loss: 0.5724   valid/loss: 0.5614   train/acc: 0.6907   valid/acc: 0.7011
+Epoch 50:    train/loss: 0.6234   valid/loss: 0.5519   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 60:    train/loss: 0.6782   valid/loss: 0.5531   train/acc: 0.6960   valid/acc: 0.7011
+Epoch 70:    train/loss: 0.5985   valid/loss: 0.5604   train/acc: 0.6868   valid/acc: 0.7011
+Epoch 80:    train/loss: 0.4942   valid/loss: 0.5592   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 90:    train/loss: 0.5944   valid/loss: 0.5573   train/acc: 0.7183   valid/acc: 0.7011
+Epoch 100:   train/loss: 0.5759   valid/loss: 0.5618   train/acc: 0.6770   valid/acc: 0.7011
+Epoch 110:   train/loss: 0.6031   valid/loss: 0.5501   train/acc: 0.6605   valid/acc: 0.7011
+Epoch 120:   train/loss: 0.6987   valid/loss: 0.5467   train/acc: 0.6881   valid/acc: 0.7011
+Epoch 130:   train/loss: 0.5735   valid/loss: 0.5483   train/acc: 0.6881   valid/acc: 0.7011
+Epoch 140:   train/loss: 0.5627   valid/loss: 0.5488   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 150:   train/loss: 0.5223   valid/loss: 0.5439   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 160:   train/loss: 0.5590   valid/loss: 0.5438   train/acc: 0.7052   valid/acc: 0.7011
+Epoch 170:   train/loss: 0.5588   valid/loss: 0.5415   train/acc: 0.6848   valid/acc: 0.7011
+Epoch 180:   train/loss: 0.5921   valid/loss: 0.5387   train/acc: 0.7012   valid/acc: 0.7011
+Epoch 190:   train/loss: 0.5909   valid/loss: 0.5350   train/acc: 0.7150   valid/acc: 0.7011
+Epoch 200:   train/loss: 0.5425   valid/loss: 0.5363   train/acc: 0.7065   valid/acc: 0.7011
+Epoch 210:   train/loss: 0.6495   valid/loss: 0.5312   train/acc: 0.7242   valid/acc: 0.7011
+Epoch 220:   train/loss: 0.5726   valid/loss: 0.5357   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 230:   train/loss: 0.5788   valid/loss: 0.5360   train/acc: 0.6940   valid/acc: 0.7011
+Epoch 240:   train/loss: 0.4898   valid/loss: 0.5424   train/acc: 0.6980   valid/acc: 0.7011
+Epoch 250:   train/loss: 0.4862   valid/loss: 0.5420   train/acc: 0.6947   valid/acc: 0.7011
+Epoch 260:   train/loss: 0.5765   valid/loss: 0.5395   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 270:   train/loss: 0.5931   valid/loss: 0.5359   train/acc: 0.7196   valid/acc: 0.7011
+Epoch 280:   train/loss: 0.6011   valid/loss: 0.5308   train/acc: 0.6855   valid/acc: 0.7011
+Epoch 290:   train/loss: 0.5722   valid/loss: 0.5332   train/acc: 0.7072   valid/acc: 0.7011
+Epoch 300:   train/loss: 0.5204   valid/loss: 0.5289   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 310:   train/loss: 0.5198   valid/loss: 0.5322   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 320:   train/loss: 0.6181   valid/loss: 0.5315   train/acc: 0.6967   valid/acc: 0.7011
+Epoch 330:   train/loss: 0.5979   valid/loss: 0.5314   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 340:   train/loss: 0.6449   valid/loss: 0.5280   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 350:   train/loss: 0.5006   valid/loss: 0.5291   train/acc: 0.6960   valid/acc: 0.7011
+Epoch 360:   train/loss: 0.5864   valid/loss: 0.5309   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 370:   train/loss: 0.6020   valid/loss: 0.5232   train/acc: 0.7321   valid/acc: 0.7011
+Epoch 380:   train/loss: 0.6186   valid/loss: 0.5242   train/acc: 0.6914   valid/acc: 0.7011
+Epoch 390:   train/loss: 0.5987   valid/loss: 0.5270   train/acc: 0.6940   valid/acc: 0.7011
+Epoch 400:   train/loss: 0.5576   valid/loss: 0.5239   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 410:   train/loss: 0.5548   valid/loss: 0.5339   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 420:   train/loss: 0.5846   valid/loss: 0.5311   train/acc: 0.6927   valid/acc: 0.7011
+Epoch 430:   train/loss: 0.5171   valid/loss: 0.5298   train/acc: 0.7209   valid/acc: 0.7011
+Epoch 440:   train/loss: 0.5353   valid/loss: 0.5261   train/acc: 0.6967   valid/acc: 0.7011
+Epoch 450:   train/loss: 0.5649   valid/loss: 0.5225   train/acc: 0.6999   valid/acc: 0.7011
+Epoch 460:   train/loss: 0.5733   valid/loss: 0.5221   train/acc: 0.6973   valid/acc: 0.7011
+Epoch 470:   train/loss: 0.5858   valid/loss: 0.5191   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 480:   train/loss: 0.4999   valid/loss: 0.5153   train/acc: 0.7039   valid/acc: 0.7011
+Epoch 490:   train/loss: 0.6113   valid/loss: 0.5130   train/acc: 0.7039   valid/acc: 0.7011
+Epoch 500:   train/loss: 0.6430   valid/loss: 0.5153   train/acc: 0.7032   valid/acc: 0.7011
+Epoch 510:   train/loss: 0.5326   valid/loss: 0.5131   train/acc: 0.6940   valid/acc: 0.7011
+Epoch 520:   train/loss: 0.5450   valid/loss: 0.5116   train/acc: 0.7190   valid/acc: 0.7011
+Epoch 530:   train/loss: 0.5924   valid/loss: 0.5180   train/acc: 0.7072   valid/acc: 0.7011
+Epoch 540:   train/loss: 0.5942   valid/loss: 0.5151   train/acc: 0.6875   valid/acc: 0.7011
+Epoch 550:   train/loss: 0.5594   valid/loss: 0.5190   train/acc: 0.7439   valid/acc: 0.7011
+Epoch 560:   train/loss: 0.5535   valid/loss: 0.5180   train/acc: 0.7045   valid/acc: 0.7011
+Epoch 570:   train/loss: 0.5331   valid/loss: 0.5256   train/acc: 0.7032   valid/acc: 0.7011
+Epoch 580:   train/loss: 0.5986   valid/loss: 0.5233   train/acc: 0.6993   valid/acc: 0.7011
+Epoch 590:   train/loss: 0.6229   valid/loss: 0.5204   train/acc: 0.6986   valid/acc: 0.7011
+Epoch 600:   train/loss: 0.5420   valid/loss: 0.5182   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 610:   train/loss: 0.5894   valid/loss: 0.5225   train/acc: 0.7045   valid/acc: 0.7011
+Epoch 620:   train/loss: 0.6335   valid/loss: 0.5171   train/acc: 0.7052   valid/acc: 0.7011
+Epoch 630:   train/loss: 0.5441   valid/loss: 0.5129   train/acc: 0.7551   valid/acc: 0.7011
+Epoch 640:   train/loss: 0.6003   valid/loss: 0.5129   train/acc: 0.7032   valid/acc: 0.7011
+Epoch 650:   train/loss: 0.5650   valid/loss: 0.5114   train/acc: 0.6829   valid/acc: 0.7011
+Epoch 660:   train/loss: 0.5014   valid/loss: 0.5106   train/acc: 0.7085   valid/acc: 0.7011
+Epoch 670:   train/loss: 0.5317   valid/loss: 0.5109   train/acc: 0.7315   valid/acc: 0.7011
+Epoch 680:   train/loss: 0.6320   valid/loss: 0.5159   train/acc: 0.7157   valid/acc: 0.7011
+Epoch 690:   train/loss: 0.5145   valid/loss: 0.5092   train/acc: 0.6967   valid/acc: 0.7011
+Epoch 700:   train/loss: 0.5334   valid/loss: 0.5197   train/acc: 0.6717   valid/acc: 0.7011
+Epoch 710:   train/loss: 0.5815   valid/loss: 0.5198   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 720:   train/loss: 0.5625   valid/loss: 0.5199   train/acc: 0.7282   valid/acc: 0.7011
+Epoch 730:   train/loss: 0.5520   valid/loss: 0.5182   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 740:   train/loss: 0.4891   valid/loss: 0.5133   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 750:   train/loss: 0.5258   valid/loss: 0.5114   train/acc: 0.7209   valid/acc: 0.7011
+Epoch 760:   train/loss: 0.6006   valid/loss: 0.5110   train/acc: 0.6861   valid/acc: 0.7011
+Epoch 770:   train/loss: 0.5335   valid/loss: 0.5104   train/acc: 0.7236   valid/acc: 0.7011
+Epoch 780:   train/loss: 0.5626   valid/loss: 0.5088   train/acc: 0.6927   valid/acc: 0.7011
+Epoch 790:   train/loss: 0.5382   valid/loss: 0.5050   train/acc: 0.7282   valid/acc: 0.7011
+Epoch 800:   train/loss: 0.5512   valid/loss: 0.5078   train/acc: 0.7026   valid/acc: 0.7011
+Epoch 810:   train/loss: 0.5662   valid/loss: 0.5053   train/acc: 0.7479   valid/acc: 0.7031
+Epoch 820:   train/loss: 0.5351   valid/loss: 0.5127   train/acc: 0.7039   valid/acc: 0.7011
+Epoch 830:   train/loss: 0.5541   valid/loss: 0.5185   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 840:   train/loss: 0.5513   valid/loss: 0.5184   train/acc: 0.7104   valid/acc: 0.7011
+Epoch 850:   train/loss: 0.5969   valid/loss: 0.5148   train/acc: 0.7321   valid/acc: 0.7011
+Epoch 860:   train/loss: 0.5631   valid/loss: 0.5090   train/acc: 0.6980   valid/acc: 0.7011
+Epoch 870:   train/loss: 0.5678   valid/loss: 0.5071   train/acc: 0.6776   valid/acc: 0.7050
+Epoch 880:   train/loss: 0.5800   valid/loss: 0.5065   train/acc: 0.7315   valid/acc: 0.7031
+Epoch 890:   train/loss: 0.5656   valid/loss: 0.5085   train/acc: 0.7045   valid/acc: 0.7011
+Epoch 900:   train/loss: 0.5228   valid/loss: 0.5089   train/acc: 0.7085   valid/acc: 0.7011
+Epoch 910:   train/loss: 0.5346   valid/loss: 0.5083   train/acc: 0.7052   valid/acc: 0.7011
+Epoch 920:   train/loss: 0.5122   valid/loss: 0.5104   train/acc: 0.6960   valid/acc: 0.7011
+Epoch 930:   train/loss: 0.5310   valid/loss: 0.5097   train/acc: 0.6993   valid/acc: 0.7011
+Epoch 940:   train/loss: 0.5280   valid/loss: 0.5083   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 950:   train/loss: 0.5860   valid/loss: 0.5017   train/acc: 0.7072   valid/acc: 0.7031
+Epoch 960:   train/loss: 0.5567   valid/loss: 0.4971   train/acc: 0.6927   valid/acc: 0.7069
+Epoch 970:   train/loss: 0.5604   valid/loss: 0.4933   train/acc: 0.7170   valid/acc: 0.7088
+Epoch 980:   train/loss: 0.5574   valid/loss: 0.4969   train/acc: 0.7026   valid/acc: 0.7069
+Epoch 990:   train/loss: 0.5223   valid/loss: 0.5006   train/acc: 0.7012   valid/acc: 0.7011
+Epoch 1000:  train/loss: 0.6089   valid/loss: 0.5042   train/acc: 0.6980   valid/acc: 0.7011
+Epoch 1010:  train/loss: 0.5171   valid/loss: 0.5028   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1020:  train/loss: 0.5733   valid/loss: 0.5048   train/acc: 0.7019   valid/acc: 0.7011
+Epoch 1030:  train/loss: 0.5324   valid/loss: 0.5110   train/acc: 0.7137   valid/acc: 0.7011
+Epoch 1040:  train/loss: 0.5641   valid/loss: 0.5089   train/acc: 0.6901   valid/acc: 0.7011
+Epoch 1050:  train/loss: 0.5357   valid/loss: 0.5072   train/acc: 0.7144   valid/acc: 0.7011
+Epoch 1060:  train/loss: 0.4900   valid/loss: 0.5038   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1070:  train/loss: 0.5377   valid/loss: 0.4989   train/acc: 0.7131   valid/acc: 0.7011
+Epoch 1080:  train/loss: 0.5490   valid/loss: 0.5031   train/acc: 0.7597   valid/acc: 0.7011
+Epoch 1090:  train/loss: 0.5349   valid/loss: 0.5005   train/acc: 0.7492   valid/acc: 0.7011
+Epoch 1100:  train/loss: 0.5171   valid/loss: 0.4974   train/acc: 0.7400   valid/acc: 0.7011
+Epoch 1110:  train/loss: 0.5197   valid/loss: 0.4948   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1120:  train/loss: 0.5155   valid/loss: 0.4874   train/acc: 0.7446   valid/acc: 0.7146
+Epoch 1130:  train/loss: 0.4691   valid/loss: 0.4917   train/acc: 0.6921   valid/acc: 0.7126
+Epoch 1140:  train/loss: 0.5511   valid/loss: 0.4953   train/acc: 0.6776   valid/acc: 0.7011
+Epoch 1150:  train/loss: 0.5490   valid/loss: 0.4938   train/acc: 0.7538   valid/acc: 0.7011
+Epoch 1160:  train/loss: 0.5337   valid/loss: 0.4947   train/acc: 0.6566   valid/acc: 0.7011
+Epoch 1170:  train/loss: 0.5214   valid/loss: 0.5009   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 1180:  train/loss: 0.5337   valid/loss: 0.5027   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 1190:  train/loss: 0.5753   valid/loss: 0.4961   train/acc: 0.6999   valid/acc: 0.7011
+Epoch 1200:  train/loss: 0.5767   valid/loss: 0.4933   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1210:  train/loss: 0.5638   valid/loss: 0.4946   train/acc: 0.6927   valid/acc: 0.7011
+Epoch 1220:  train/loss: 0.4993   valid/loss: 0.4961   train/acc: 0.6940   valid/acc: 0.7011
+Epoch 1230:  train/loss: 0.5414   valid/loss: 0.4933   train/acc: 0.6953   valid/acc: 0.7011
+Epoch 1240:  train/loss: 0.5162   valid/loss: 0.4899   train/acc: 0.7052   valid/acc: 0.7011
+Epoch 1250:  train/loss: 0.5932   valid/loss: 0.4958   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1260:  train/loss: 0.5575   valid/loss: 0.4956   train/acc: 0.7328   valid/acc: 0.7011
+Epoch 1270:  train/loss: 0.4729   valid/loss: 0.4900   train/acc: 0.7183   valid/acc: 0.7011
+Epoch 1280:  train/loss: 0.5283   valid/loss: 0.4919   train/acc: 0.7347   valid/acc: 0.7011
+Epoch 1290:  train/loss: 0.5825   valid/loss: 0.4900   train/acc: 0.7301   valid/acc: 0.7011
+Epoch 1300:  train/loss: 0.5006   valid/loss: 0.4913   train/acc: 0.7301   valid/acc: 0.7011
+Epoch 1310:  train/loss: 0.5553   valid/loss: 0.4948   train/acc: 0.6980   valid/acc: 0.7011
+Epoch 1320:  train/loss: 0.5222   valid/loss: 0.4981   train/acc: 0.6408   valid/acc: 0.7011
+Epoch 1330:  train/loss: 0.4816   valid/loss: 0.4961   train/acc: 0.6940   valid/acc: 0.7011
+Epoch 1340:  train/loss: 0.6067   valid/loss: 0.4892   train/acc: 0.6927   valid/acc: 0.7011
+Epoch 1350:  train/loss: 0.4899   valid/loss: 0.4882   train/acc: 0.7255   valid/acc: 0.7011
+Epoch 1360:  train/loss: 0.5633   valid/loss: 0.4897   train/acc: 0.7400   valid/acc: 0.7011
+Epoch 1370:  train/loss: 0.4842   valid/loss: 0.4940   train/acc: 0.7012   valid/acc: 0.7011
+Epoch 1380:  train/loss: 0.5798   valid/loss: 0.4892   train/acc: 0.7485   valid/acc: 0.7011
+Epoch 1390:  train/loss: 0.4987   valid/loss: 0.4934   train/acc: 0.7052   valid/acc: 0.7011
+Epoch 1400:  train/loss: 0.5494   valid/loss: 0.4924   train/acc: 0.6927   valid/acc: 0.7011
+Epoch 1410:  train/loss: 0.6044   valid/loss: 0.4891   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1420:  train/loss: 0.5273   valid/loss: 0.4906   train/acc: 0.6921   valid/acc: 0.7011
+Epoch 1430:  train/loss: 0.5455   valid/loss: 0.4875   train/acc: 0.6934   valid/acc: 0.7011
+Epoch 1440:  train/loss: 0.5798   valid/loss: 0.4859   train/acc: 0.6940   valid/acc: 0.7011
+Epoch 1450:  train/loss: 0.5564   valid/loss: 0.4862   train/acc: 0.7308   valid/acc: 0.7011
+Epoch 1460:  train/loss: 0.5032   valid/loss: 0.4843   train/acc: 0.6947   valid/acc: 0.7011
+Epoch 1470:  train/loss: 0.5610   valid/loss: 0.4905   train/acc: 0.6888   valid/acc: 0.7011
+Epoch 1480:  train/loss: 0.5873   valid/loss: 0.4913   train/acc: 0.6914   valid/acc: 0.7011
+Epoch 1490:  train/loss: 0.5961   valid/loss: 0.4847   train/acc: 0.7104   valid/acc: 0.7088
+Epoch 1500:  train/loss: 0.5438   valid/loss: 0.4830   train/acc: 0.7137   valid/acc: 0.7222
+
+Training completed!
+ic| main(EPOCHS, SEED, BATCH_SIZE,MODEL=model): None
+ic| 'setting model'
+ic| t: '2024-08-07_01_40_16'
+Train circuits done
+Dev circuits done
+Test circuits done
+OOV circuits done
+Redundant circuits done
+Initialize trainer
+2024-08-06_18_00_19
+Starting fit
+Saving everything
+Wed  7 Aug 01:41:29 BST 2024
+GPU Epilog Script v0.30

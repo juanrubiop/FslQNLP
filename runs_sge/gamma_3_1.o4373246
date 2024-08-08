@@ -1,0 +1,84 @@
+GPU Prolog Script v1.14
+This is a GPU node.
+Enough GPUs available.
+Allocating card 0
+gonzo-605-12.local
+Tue  6 Aug 13:05:17 BST 2024
+Time168h
+ic| 'parser and tokeniser'
+ic| 'importing embeddings'
+ic| 'reading data'
+ic| len(values): 52
+ic| TESTING: False
+ic| 'generating diagrams'
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+Tagging sentences.
+Parsing tagged sentences.
+Turning parse trees to diagrams.
+ic| 'Finished importing embeddings'
+ic| ansatz_string: 'FslNN'
+ic| 'Turning sentences to circuits'
+ic| ansatz_string: 'FslNN'
+ic| map: {grammar.pregroup.Ty(rigid.Ob('n')): 3, grammar.pregroup.Ty(rigid.Ob('s')): 1}
+ic| 'Circuit Processing finished'
+ic| 'Setting model'
+ic| 'setting model'
+ic| EPOCHS: 1500, SEED: 400, BATCH_SIZE: 700
+E0806 15:59:33.389371    4789 pjrt_stream_executor_client.cc:2809] Execution of replica 0 failed: RESOURCE_EXHAUSTED: CUDA driver ran out of memory trying to instantiate CUDA graph with 225 nodes and 0 conditionals (total of 0 alive CUDA graphs in the process). You can try to (a) Give more memory to CUDA driver by reducing XLA_PYTHON_CLIENT_MEM_FRACTION (b) Disable CUDA graph with 'XLA_FLAGS=--xla_gpu_enable_command_buffer=' (empty set). Original error: Failed to instantiate CUDA graph:CUDA_ERROR_OUT_OF_MEMORY: out of memory
+Train circuits done
+Dev circuits done
+Test circuits done
+OOV circuits done
+Redundant circuits done
+Initialize trainer
+2024-08-06_13_28_42
+Starting fit
+Traceback (most recent call last):
+  File "/home/jrubiope/FslQnlp/MC_exe.py", line 416, in <module>
+    if TESTING:
+                
+  File "/home/jrubiope/FslQnlp/MC_exe.py", line 373, in main
+    print(t)
+    ^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/quantum_trainer.py", line 200, in fit
+    super().fit(train_dataset,
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/trainer.py", line 435, in fit
+    t_loss = self._step_and_eval(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/trainer.py", line 341, in _step_and_eval
+    y_hat, loss = step_func(batch)
+                  ^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/quantum_trainer.py", line 163, in training_step
+    loss = self.optimizer.backward(batch)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/spsa_optimizer.py", line 152, in backward
+    y0 = self.model(diagrams)
+         ^^^^^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/quantum_model.py", line 147, in __call__
+    out = self.forward(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/numpy_model.py", line 192, in forward
+    return self.get_diagram_output(x)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/numpy_model.py", line 158, in get_diagram_output
+    res: jnp.ndarray = jnp.array([diag_f(self.weights)
+                                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/lambeq/training/numpy_model.py", line 158, in <listcomp>
+    res: jnp.ndarray = jnp.array([diag_f(self.weights)
+                                  ^^^^^^^^^^^^^^^^^^^^
+jaxlib.xla_extension.XlaRuntimeError: RESOURCE_EXHAUSTED: CUDA driver ran out of memory trying to instantiate CUDA graph with 225 nodes and 0 conditionals (total of 0 alive CUDA graphs in the process). You can try to (a) Give more memory to CUDA driver by reducing XLA_PYTHON_CLIENT_MEM_FRACTION (b) Disable CUDA graph with 'XLA_FLAGS=--xla_gpu_enable_command_buffer=' (empty set). Original error: Failed to instantiate CUDA graph:CUDA_ERROR_OUT_OF_MEMORY: out of memory
+--------------------
+For simplicity, JAX has removed its internal frames from the traceback of the following exception. Set JAX_TRACEBACK_FILTERING=off to include these.
+Tue  6 Aug 16:01:33 BST 2024
+GPU Epilog Script v0.30
