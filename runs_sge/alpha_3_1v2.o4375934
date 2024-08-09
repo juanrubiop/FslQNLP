@@ -1,0 +1,24 @@
+GPU Prolog Script v1.14
+This is a GPU node.
+Enough GPUs available.
+Allocating card 3
+doglion.local
+Thu  8 Aug 17:09:29 BST 2024
+Time56h
+ic| 'parser and tokeniser'
+ic| 'importing embeddings'
+ic| 'reading data'
+ic| len(values): 52
+Traceback (most recent call last):
+  File "/home/jrubiope/FslQnlp/MC_exe.py", line 211, in <module>
+    model=get_NN(i)
+          ^^^^^^^^^
+  File "/home/jrubiope/FslQnlp/MC_exe.py", line 189, in get_NN
+    saved_model.load_state_dict(torch.load(PATH))
+  File "/home/jrubiope/.local/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2152, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for PreQ:
+	Missing key(s) in state_dict: "linear_relu_stack.0.weight", "linear_relu_stack.0.bias", "linear_relu_stack.2.weight", "linear_relu_stack.2.bias", "linear_relu_stack.4.weight", "linear_relu_stack.4.bias", "linear_relu_stack.6.weight", "linear_relu_stack.6.bias". 
+	Unexpected key(s) in state_dict: "module.linear_relu_stack.0.weight", "module.linear_relu_stack.0.bias", "module.linear_relu_stack.2.weight", "module.linear_relu_stack.2.bias", "module.linear_relu_stack.4.weight", "module.linear_relu_stack.4.bias", "module.linear_relu_stack.6.weight", "module.linear_relu_stack.6.bias". 
+Thu  8 Aug 17:15:42 BST 2024
+GPU Epilog Script v0.30
